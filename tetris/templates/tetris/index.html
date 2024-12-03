@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TETRIS</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #1c1d1d;
+      color: #fffdf0;
+    }
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .text_design {
+      font-family: 'Roboto Medium', sans-serif;
+      font-size: 20px;
+      font-weight: 500;
+      margin-bottom: 10px;
+      text-shadow: 
+        5px  5px 10px #1dd1b9,  /*  Нижний - Справа */
+        5px -5px 10px #1dd1b9,  /*  Нижний - Слева  */
+        -5px  5px 10px #1dd1b9,  /* Верхний - Справа */
+        -5px -5px 10px #1dd1b9;  /* Верхний - Слева  */
+      font-weight: 500;
+    }
+    input[type="text"] {
+      padding: 8px;
+      border: 1px solid #CCCCCC;
+      border-radius: 4px;
+      margin-bottom: 10px;
+    }
+    input:focus {
+      outline: none;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #fffdf0;
+      border: none;
+      border-radius: 4px;
+      color: #1dd1b9;
+      font-size: 16px;
+      cursor: pointer;
+      width: 100%;
+    }
+    button:hover {
+      background-color: #1dd1b9;
+      color: #fffdf0;
+    }
+    .cell{
+        width: 1.3rem;
+        height: 1.3rem;
+      }
+      .value0{
+        background: rgb(236, 236, 236);
+      }
+      .value1{
+        background: #1dd1b9;
+        border-radius: 35%;
+      }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div>
+      {% if not game is None and not game.is_gameover %}
+      <table>
+        {% for row in gamefield.game_matrix %}
+        <tr>
+          {% for cell in row %}
+          <td>
+            <div class="cell value{{ cell }}"></div>
+          </td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </table>
+      <p class="text_design">Your score - {{ game.score }}</p>
+      {% if not game.is_gameover %}
+      <script>
+        window.addEventListener("keydown", evt => {
+          console.log(evt.keyCode)
+          if ([37, 38, 39, 40].includes(evt.keyCode)){
+            fetch("action?key="+evt.keyCode)
+          }
+        })
+        setTimeout(() => location.href = location.href, 1000)
+      </script>
+      {% endif %}
+      {% endif %}
+      {% if game is None %}
+      <form class="form" method="POST">
+        <p class="text_design tetris-title" style="font-size: 43px; margin-bottom: 0px; margin-top: 0px;">TETRIS</p>
+        <p class="text_design by-cult2rologist" style="margin-top: 0px; margin-bottom: 50px;">by Rustam</p>
+        <input type="text" name="name" placeholder="Type your name" style="background-color: transparent; border: 1px solid #1dd1b9; color: #ffffff; padding: 8px; border-radius: 4px;"/>
+        <button>Play</button>
+        {% csrf_token %}
+      </form>
+      {% endif %}
+      {% if game.is_gameover %}
+      <h1 class="text_design" style="font-size: 32px; display: flex; justify-content: center;">Leader's Board</h1>
+      <ol class="form" >
+        {% for score in scores %}
+        <li class="text_design">{{ score.name }} - {{ score.score }}</li>
+        {% endfor %}
+      </ol>
+      <form action="" method="GET">
+        <button type="button" onclick="location.reload()">Reload</button>
+      </form>
+      {% endif %}
+    </div>
+  </div>
+</body>
+</html>

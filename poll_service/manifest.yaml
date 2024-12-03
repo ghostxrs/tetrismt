@@ -1,0 +1,11 @@
+---
+applications:
+- name: poll
+  path : .
+  command: python server.py
+  memory: 256M
+  disk_quota: 512M
+  buildpacks:
+  - python_buildpack
+  env:
+    DISABLE_COLLECTSTATIC: 1

@@ -1,0 +1,9 @@
+---
+applications:
+- name: Tetris
+  path : .
+  command: gunicorn --bind 0.0.0.0:$PORT mysite.wsgi:application
+  buildpacks:
+  - python_buildpack
+  env:
+    DISABLE_COLLECTSTATIC: 1
